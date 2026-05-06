@@ -1,0 +1,63 @@
+% !Mode:: "TeX:UTF-8"
+%
+% 第一章：绪论
+%
+% 本节展示的用法：
+%   - 公式（equation 环境）
+%   - 定理环境（definition / theorem / lemma / corollary / remark）
+%   - 参考文献引用（\cite{}）
+%
+
+\chapter{绪论}
+\echapter{Introduction}
+\label{chap:introduction}
+
+本章介绍论文的研究背景、相关工作以及组织结构，并展示模板支持的各类排版环境。
+
+\section{研究背景}
+\esection{Research Background}
+\label{sec:background}
+
+随着科学技术的不断发展，数学建模方法在众多领域得到了广泛应用。相关研究在理论和实践层面都取得了重要进展\cite{ho2020denoising}。
+
+\subsection{问题描述}
+\label{subsec:problem}
+
+设 \(X\) 为一随机变量，其期望值定义为
+\begin{equation}
+\mathbb{E}[X] = \int_{\Omega} X(\omega) \,\mathrm{d}\mathbb{P}(\omega),
+\label{eq:expectation}
+\end{equation}
+方差定义为 \(\mathrm{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2]\)。
+
+\subsection{基本定义}
+\label{subsec:definitions}
+
+\begin{definition}
+设 \((\Omega, \mathcal{F}, \mathbb{P})\) 为一概率空间。称 \(X: \Omega \to \mathbb{R}\) 为随机变量，若对任意 \(a \in \mathbb{R}\)，有 \(\{\omega: X(\omega) \leq a\} \in \mathcal{F}\)。
+\end{definition}
+
+\begin{theorem}[大数定律]
+设 \(\{X_n\}\) 为独立同分布随机变量，\(\mathbb{E}[X_1] = \mu\)，则
+\begin{equation}
+\frac{1}{n}\sum_{i=1}^n X_i \xrightarrow{\text{a.s.}} \mu.
+\label{eq:lln}
+\end{equation}
+\end{theorem}
+
+\begin{lemma}
+对于任意随机变量 \(X, Y\)，有 \(\mathbb{E}[(X+Y)^2] \leq 2\mathbb{E}[X^2] + 2\mathbb{E}[Y^2]\)。
+\end{lemma}
+
+\begin{corollary}
+由引理可得 \(L^2\) 空间中的三角不等式。
+\end{corollary}
+
+\begin{remark}
+以上结论在后续章节中会反复使用。
+\end{remark}
+
+\section{文章组织}
+\esection{Thesis Organization}
+
+本文的结构安排如下：第\ref{chap:preliminaries}章介绍预备知识；第\ref{chap:method}章详述方法；第\ref{chap:experiments}章展示实验；最后总结全文。

@@ -1,0 +1,79 @@
+\newtoks\fenlei          % 中图分类号
+\newtoks\DWdaihao        % 单位代号
+\newtoks\miji            % 密级
+\newtoks\StuNum          % 学号
+\newtoks\CThesisType     % 论文类型 中
+\newtoks\EThesisType     % 论文类型 英
+\newtoks\Ctitle          % 中文标题
+\newtoks\Etitle          % 英文标题
+\newtoks\Cauthor         % 作者中文名
+\newtoks\Cmajor          % 专业
+\newtoks\Csuperver       % 导师
+\newtoks\Ccosuperver     % 合作导师
+\newtoks\Cdate           % 中文日期
+\newtoks\Dpart           % 学院
+\newtoks\Dform           % 培养方式
+\newtoks\Grade           % 年级
+\newtoks\ThesisHeader    % 正文页眉
+\newtoks\EThesisHeader   % 英文页眉
+\newtoks\DegreeType      % 学位类型：学术学位 / 专业学位
+
+\RequirePackage{makecell}
+\RequirePackage{colortbl}
+\newcommand{\LeftLength}{2.3cm}
+\newcommand{\RightLength}{5.5cm}
+\newcommand{\Mcs}[1]{\makebox[\LeftLength][s]{{\zihao{-3}\songti{}#1}}}
+\newcommand{\Mcc}[1]{\makebox[\RightLength][c]{{\zihao{-3}\songti{}#1}}}
+\newcommand{\TopTitleLeft}[1]{\makebox[2cm][s]{{\zihao{-3}\songti{}#1}}}
+\newcommand{\TopTitleRight}[1]{\makebox[2.5cm][l]{{\zihao{-3}\songti{}#1}}}
+
+\newcommand{\maketitlepage}{%
+\thispagestyle{empty}
+
+\begin{flushleft}
+\setlength{\parskip}{0pt}\setlength{\baselineskip}{28pt}
+\textcolor{SDUred}{\TopTitleLeft{分类号：}~~\TopTitleRight{\the\fenlei}\hfill\TopTitleLeft{单位代码：\quad}~~\TopTitleRight{\quad10422}}\\
+\textcolor{SDUred}{\TopTitleLeft{密级：}~~\TopTitleRight{\the\miji}\hfill\TopTitleLeft{学\quad\quad 号：\quad}~~\TopTitleRight{\quad\the\StuNum}}
+\end{flushleft}
+
+\begin{center}
+~
+\vskip 12mm\relax
+{
+\includegraphics[width=.70\textwidth]{SDU_master.jpg}\\[3mm]
+{\fontsize{60}{72}\selectfont\bfseries\heiti\textcolor{SDUred}{\the\CThesisType}}\\[4mm]
+{\zihao{-2}\textcolor{SDUred}{\the\EThesisType}}\\[4mm]
+{\heiti\zihao{1}\the\DegreeType}
+}
+
+{
+    \centering
+    {\zihao{-3}\songti\textcolor{SDUred}{论文题目：}}~~
+    \zihao{-3}\songti\textcolor{SDUred}{\the\Ctitle}
+    \par
+}
+{
+\vskip 2mm
+\zihao{3}\bfseries\the\Etitle
+}
+\vskip 1\baselineskip
+\vfill
+{
+\begin{tabular}{p{\LeftLength}p{\RightLength}}
+\arrayrulecolor{SDUred}
+\Mcs{\textcolor{SDUred}{作~ 者~ 姓~ 名}}& \Mcc{\the\Cauthor}\\[-.8mm]\cline{2-2}\\[-4mm]
+\Mcs{\textcolor{SDUred}{培~ 养~ 单~ 位}}& \Mcc{\the\Dpart}\\[-.8mm]\cline{2-2}\\[-4mm]
+\Mcs{\textcolor{SDUred}{培~ 养~ 方~ 式}}& \Mcc{\the\Dform}\\[-.8mm]\cline{2-2}\\[-4mm]
+\Mcs{\textcolor{SDUred}{专~ 业~ 名~ 称}}& \Mcc{\the\Cmajor}\\[-.8mm]\cline{2-2}\\[-4mm]
+\Mcs{\textcolor{SDUred}{指~ 导~ 教~ 师}}& \Mcc{\the\Csuperver}\\[-.8mm]\cline{2-2}\\[-4mm]
+\Mcs{\textcolor{SDUred}{合~ 作~ 导~ 师}}& \Mcc{\the\Ccosuperver}\\[-.8mm]\cline{2-2}
+\end{tabular}
+}
+\par \vskip 20mm \relax
+\color{SDUred}
+{
+\zihao{3}\heiti\the\Cdate
+}
+\end{center}
+\let\cleardoublepage\clearpage
+}

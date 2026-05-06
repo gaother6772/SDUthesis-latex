@@ -1,0 +1,32 @@
+% !Mode:: "TeX:UTF-8"
+
+\chapter{补充材料}
+
+本附录给出正文中省略的补充内容。
+
+\section{补充证明}
+
+设条件成立，则有
+\begin{equation}
+\begin{aligned}
+\mathbb{E}[(X+Y)^2] &= \mathbb{E}[X^2] + 2\mathbb{E}[XY] + \mathbb{E}[Y^2] \\
+&\leq \mathbb{E}[X^2] + 2\sqrt{\mathbb{E}[X^2]\mathbb{E}[Y^2]} + \mathbb{E}[Y^2] \\
+&\leq 2\,\mathbb{E}[X^2] + 2\,\mathbb{E}[Y^2].
+\end{aligned}
+\end{equation}
+
+\section{补充数据}
+
+\begin{table}[h]
+\centering
+\caption{多次重复实验结果}
+\begin{tabular}{cccc}
+\toprule
+编号 & 准确率 (\%) & F1 & 损失 \\
+\midrule
+1 & 91.02 & 0.902 & 0.032 \\
+2 & 91.31 & 0.905 & 0.031 \\
+3 & 91.15 & 0.903 & 0.032 \\
+\bottomrule
+\end{tabular}
+\end{table}

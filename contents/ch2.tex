@@ -1,0 +1,74 @@
+% !Mode:: "TeX:UTF-8"
+%
+% 第二章：预备知识
+%
+% 本节展示的用法：
+%   - 算法环境（algorithm2e）
+%   - 表格（table + tabular + booktabs）
+%   - 列表（itemize）
+%   - 简单公式
+%
+
+\chapter{预备知识}
+\echapter{Preliminaries}
+\label{chap:preliminaries}
+
+本章介绍后续所需的基础知识，包括优化方法和矩阵运算等。
+
+\section{优化方法}
+\esection{Optimization Methods}
+\label{sec:optimization}
+
+\subsection{梯度下降法}
+\label{subsec:gd}
+
+考虑无约束优化问题
+\begin{equation}
+\min_{x \in \mathbb{R}^n} f(x),
+\label{eq:opt_prob}
+\end{equation}
+梯度下降的迭代格式为 \(x_{k+1} = x_k - \alpha_k \nabla f(x_k)\)。
+
+常用的优化方法包括：
+\begin{itemize}
+\item \textbf{梯度下降}：一阶迭代方法，收敛慢但每步计算量小。
+\item \textbf{牛顿法}：利用二阶 Hessian 矩阵加速收敛。
+\item \textbf{拟牛顿法}：近似 Hessian 矩阵，平衡收敛速度与计算开销。
+\end{itemize}
+
+算法\ref{alg:sgd}给出了随机梯度下降的实现流程。
+
+\begin{algorithm}[h]
+\caption{随机梯度下降（SGD）}
+\label{alg:sgd}
+\SetAlgoLined
+\KwIn{初始参数 \(x_0\)，学习率 \(\{\alpha_k\}\)，迭代次数 \(K\)}
+\KwOut{优化结果 \(x_K\)}
+\For{\(k = 0\) \KwTo \(K-1\)}{
+    采样小批量 \(\mathcal{B}_k\)\;
+    计算梯度 \(g_k = \frac{1}{|\mathcal{B}_k|} \sum_{i \in \mathcal{B}_k} \nabla f_i(x_k)\)\;
+    更新 \(x_{k+1} = x_k - \alpha_k g_k\)\;
+}
+\Return \(x_K\)\;
+\end{algorithm}
+
+\section{矩阵运算}
+\esection{Matrix Operations}
+\label{sec:matrix}
+
+表\ref{tab:methods}对比了不同优化方法的特点。
+
+\begin{table}[h]
+\centering
+\caption{不同优化方法的对比}
+\label{tab:methods}
+\begin{tabular}{lccc}
+\toprule
+方法 & 收敛速度 & 内存开销 & 实现难度 \\
+\midrule
+梯度下降 & 慢 & 低 & 简单 \\
+牛顿法 & 快 & 高 & 中等 \\
+拟牛顿法 & 较快 & 中等 & 较复杂 \\
+\bottomrule
+\end{tabular}
+\end{table}

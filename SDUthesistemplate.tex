@@ -1,0 +1,76 @@
+% !Mode:: "TeX:UTF-8"
+% !TeX root = SDUthesistemplate.tex
+%!TEX program = xelatex
+%\expandafter\def\csname CTEX@spaceChar\endcsname{\hspace{1em}}
+
+%==============================================================
+% 学位类型切换方式（见 contents/titlepageinfo.tex）：
+%
+%   学术学位（默认/黑色）：\DegreeType{（学术学位）}
+%   专业学位（红色）：     \DegreeType{\textcolor{SDUred}{（专业学位）}}
+%
+% 在 titlepageinfo.tex 中取消对应行的注释即可，不要修改本文件。
+%==============================================================
+\documentclass[single,print]{sduthesis}
+
+\input{contents/titlepageinfo.tex}
+\input{contents/usersettings.tex}
+
+\begin{document}
+
+% 首页及原创性声明
+\maketitlepagestatement
+\cleardoublepage
+% 大写罗马页码
+\pagenumbering{Roman}\setcounter{page}{1}
+
+\cleardoublepage
+% 中英文摘要
+\input{contents/abstract.tex}
+% Chinese TOC
+%\pagenumbering{Roman}\setcounter{page}{1}
+% \begin{KeepFromToc}
+
+\setcounter{tocdepth}{1} % 设置目录显示深度：1只显示到Section，2显示到Subsection，3显示到Subsubsection
+
+\maketableofcontents
+%\end{KeepFromToc}
+%\cleardoublepage
+% English TOC
+\tableofengcontents
+\input{contents/symbol.tex}
+\newpage
+
+
+% 阿拉伯数字页码
+\pagenumbering{arabic}\setcounter{page}{1}
+
+% 正文
+% \input{contents/body.tex}
+\input{contents/ch1.tex}
+\input{contents/ch2.tex}
+\input{contents/ch3.tex}
+\input{contents/ch4.tex}
+\input{contents/ch5.tex}
+\input{contents/conclusions.tex}
+
+% 参考文献
+
+% 参考文献
+\bibliographystyle{gbt7714-numerical}
+\citestyle{super}
+\ereferences{}
+\bibliography{contents/reference.bib}
+
+% 致谢及其他
+\input{contents/acknowledgement.tex}
+
+% 附录（取消注释即可启用）
+\appendix
+\input{contents/appendix1.tex}
+
+\input{contents/miscellaneous.tex}
+
+
+
+\end{document}
