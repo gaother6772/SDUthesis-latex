@@ -1,4 +1,4 @@
-# 山东大学硕士/博士研究生毕业论文模板
+# 山东大学研究生毕业论文模板
 
 本论文模板基于 [cnDelbert/SDU_thesis_template_for_postgraduate](https://github.com/cnDelbert/SDU_thesis_template_for_postgraduate) 修改而来，在 CTeX / TeX Live 环境下编译通过。
 
