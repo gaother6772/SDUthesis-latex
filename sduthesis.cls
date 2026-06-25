@@ -1,6 +1,6 @@
 % !Mode:: "TeX:UTF-8"
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
-\ProvidesClass{sduthesis}[2015/05/12 v1.0.5 Shandong University Thesis Template for Postgraduate]
+\ProvidesClass{sduthesis}[2026/06/24 v1.2.0 Shandong University Thesis Template for Postgraduate]
 %------解决表格换行问题-------
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}  
 %------解决表格换行问题-------
@@ -21,20 +21,61 @@
 % ----- double/single
 \DeclareBoolOption[true]{double}
 \DeclareComplementaryOption{single}{double}
+% ----- cover/degree/statement
+\DeclareStringOption[2024]{cover}
+\DeclareStringOption[academic]{degree}
+\DeclareBoolOption[true]{statement}
+\DeclareComplementaryOption{nostatement}{statement}
 % ----- Default Options
-\DeclareDefaultOption{\PassOptionsToPackage{\CurrentOption}{ctexbook}}
-% A4纸张大小，书记格式
-%\LoadClass[a4paper, 12pt]{book}
-\LoadClass[a4paper,UTF8, 12pt, openany]{book}
+\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessKeyvalOptions*\relax
-
-\ifSDU@opt@double\relax\else
-	\PassOptionsToClass{openany}{book}
+% Validate string options once, before layout files consume them.
+\newif\ifSDU@cover@legacy
+\newif\ifSDU@degree@professional
+\ifdefstring{\SDU@opt@cover}{2024}{%
+  \SDU@cover@legacyfalse
+}{%
+  \ifdefstring{\SDU@opt@cover}{legacy}{%
+    \SDU@cover@legacytrue
+  }{%
+    \ClassError{sduthesis}{Invalid cover option `\SDU@opt@cover'}{Use cover=2024 or cover=legacy.}%
+  }%
+}
+\ifdefstring{\SDU@opt@degree}{academic}{%
+  \SDU@degree@professionalfalse
+}{%
+  \ifdefstring{\SDU@opt@degree}{professional}{%
+    \SDU@degree@professionaltrue
+  }{%
+    \ClassError{sduthesis}{Invalid degree option `\SDU@opt@degree'}{Use degree=academic or degree=professional.}%
+  }%
+}
+% A4 纸张；双面模式使用镜像页边距并保证章从奇数页开始。
+\ifSDU@opt@double
+  \LoadClass[a4paper,12pt,twoside,openright]{book}
+\else
+  \LoadClass[a4paper,12pt,oneside,openany]{book}
 \fi
 %------print------
 
 %------中文支持------
-\RequirePackage[ noindent, scheme=plain, UTF8, heading]{ctex}
+\RequirePackage[scheme=plain,UTF8,heading,fontset=none]{ctex}
+% 2024 版模板以 Windows 字体为基准；显式配置粗体/斜体映射以避免静默回退。
+\setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
+\setCJKsansfont[AutoFakeBold=2]{SimHei}
+\setCJKmonofont{FangSong}
+\setCJKfamilyfont{zhsong}[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
+\setCJKfamilyfont{zhhei}[AutoFakeBold=2]{SimHei}
+\setCJKfamilyfont{zhfs}{FangSong}
+\setCJKfamilyfont{zhkai}{KaiTi}
+\providecommand{\songti}{}
+\providecommand{\heiti}{}
+\providecommand{\fangsong}{}
+\providecommand{\kaishu}{}
+\renewcommand{\songti}{\CJKfamily{zhsong}}
+\renewcommand{\heiti}{\CJKfamily{zhhei}}
+\renewcommand{\fangsong}{\CJKfamily{zhfs}}
+\renewcommand{\kaishu}{\CJKfamily{zhkai}}
 %----字体名
 %\RequirePackage{ifpdf,ifxetex}
 %\ifpdf
@@ -46,17 +87,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%页面设置%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 \ifSDU@opt@double
-%\newcommand{\GeoOptions}{left=3.75cm, right=2.75cm, top=3cm, bottom=3cm}
-\newcommand{\GeoOptions}{left=3.0cm, right=2.5cm, top=2.5cm, bottom=2.5cm,headheight=0.7cm,headsep=0.3cm,footskip=0.75cm}
+  \newcommand{\GeoOptions}{inner=3.0cm,outer=2.5cm,top=2.5cm,bottom=2.5cm,headheight=0.7cm,headsep=0.3cm,footskip=0.75cm}
 \else
-\newcommand{\GeoOptions}{left=3.0cm, right=2.5cm, top=2.5cm, bottom=2.5cm,headheight=0.7cm,headsep=0.3cm,footskip=0.75cm}
+  \newcommand{\GeoOptions}{left=3.0cm,right=2.5cm,top=2.5cm,bottom=2.5cm,headheight=0.7cm,headsep=0.3cm,footskip=0.75cm}
 \fi
 %\newcommand{\GeoOptions}{left=2.75cm, right=2.75cm, top=3cm, bottom=3cm}
 %\fi
 \RequirePackage[\GeoOptions]{geometry}
-\ifSDU@opt@double\relax\else
-	\geometry{twoside=false}
-\fi
 %------页面设置------
 %------行距------
 \linespread{1.3}
@@ -125,7 +162,6 @@
 \SetAlFnt{\linespread{1.3}\normalfont} % 将行距设置为1.5倍
 %%----表格行距----
 %----编号----
-\RequirePackage{amsmath}
 \numberwithin{figure}{chapter}
 \numberwithin{table}{chapter}
 \renewcommand\theequation{\arabic{chapter}-\arabic{equation}}
@@ -140,15 +176,28 @@
 \RequirePackage{caption}
 \captionsetup[figure]{font={small, bf}, labelsep=space, skip=6pt, position=bottom}
 \captionsetup[table]{font={small, bf}, labelsep=space, skip=6pt, position=top}
+% 浮动页从顶部排版，避免小表格或算法被垂直居中在大块空白中。
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{14pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.80}
+\setlength{\textfloatsep}{16pt plus 3pt minus 3pt}
+\setlength{\floatsep}{14pt plus 3pt minus 3pt}
 %----不浮动----
-\usepackage{multirow}
+\RequirePackage{multirow}
 %------图表支持------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%交叉引用%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{hyperref}
-\hypersetup{unicode}
+\hypersetup{unicode,hypertexnames=false}
 \hypersetup{colorlinks=true}
 \hypersetup{linkcolor=black}
+\pdfstringdefDisableCommands{\def\quad{ }}
 \makeatletter
 \ifSDU@opt@print
 	\hypersetup{allcolors=black}
@@ -291,37 +340,45 @@
 %\makeatletter
 %\ifSDU@opt@chsstyle
 %%%%%%%%%%%%%%%%%%%标题与日期%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\CTEXoptions[figurename={图},tablename={表},bibname={参考文献},contentsname={目\quad{}{}录}]
-\CTEXoptions[today=small]
-%----标题与日期----
-%%%%%%%%%%%%%%%%%%%%%%章节样式%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%--chapter
-\CTEXsetup[name={,}]{chapter}
-%\CTEXsetup[number={\chinese{chapter}}]{chapter}
-\CTEXsetup[format={\centering}]{chapter}
-\CTEXsetup[nameformat={\bfseries\heiti\zihao{-3}}]{chapter}
-\CTEXsetup[titleformat={\bfseries\heiti\zihao{-3}}]{chapter}
-\CTEXsetup[aftername={\ }]{chapter}
-\CTEXsetup[beforeskip={24pt}]{chapter}%不知道是不是管章节
-\CTEXsetup[afterskip={18pt}]{chapter}
-%\CTEXsetup[beforeskip={10pt}]{chapter}%不知道是不是管章节
-%\CTEXsetup[afterskip={10pt}]{chapter}
-%--section
-% \CTEXsetup[name={$\S$\,,}]{section} % 去掉章节前的双S花符号
-\CTEXsetup[format={\bfseries\heiti\flushleft\zihao{4}}]{section}
-\CTEXsetup[beforeskip={24pt}]{section}
-\CTEXsetup[afterskip={6pt}]{section}
-%--subsection
-\CTEXsetup[format={\bfseries\heiti\flushleft\zihao{-4}}]{subsection}
-\CTEXsetup[beforeskip={12pt}]{subsection}
-\CTEXsetup[afterskip={6pt}]{subsection}
-%--subsubsection
-\CTEXsetup[format={\flushleft\heiti\zihao{-4}}]{subsubsection}
-\CTEXsetup[beforeskip={12pt}]{subsubsection}
-\CTEXsetup[afterskip={6pt}]{subsubsection}
-%--appendix
-\CTEXsetup[name={附录~}]{appendix}
-\CTEXsetup[number={\Alph{chapter}}]{appendix}
+\ctexset{
+  figurename = {图},
+  tablename = {表},
+  bibname = {参考文献},
+  contentsname = {目\quad{}{}录},
+  today = small,
+  chapter = {
+    name = {,},
+    format = {\centering},
+    nameformat = {\bfseries\heiti\zihao{-3}},
+    titleformat = {\bfseries\heiti\zihao{-3}},
+    aftername = {\ },
+    beforeskip = {24pt},
+    afterskip = {18pt},
+    afterindent = true
+  },
+  section = {
+    format = {\bfseries\heiti\raggedright\zihao{4}},
+    beforeskip = {24pt},
+    afterskip = {6pt},
+    afterindent = true
+  },
+  subsection = {
+    format = {\bfseries\heiti\raggedright\zihao{-4}},
+    beforeskip = {12pt},
+    afterskip = {6pt},
+    afterindent = true
+  },
+  subsubsection = {
+    format = {\heiti\raggedright\zihao{-4}},
+    beforeskip = {12pt},
+    afterskip = {6pt},
+    afterindent = true
+  },
+  appendix = {
+    name = {附录~},
+    number = {\Alph{chapter}}
+  }
+}
 %
 %%%%%%%%%%%%%%%%%%%致谢%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\acknowledgment}
@@ -386,12 +443,14 @@
 
 %\setlength{\parskip}{0pt}% 设置段前段后间距为0pt
 %\setlength{\baselineskip}{20pt}
-\raggedbottom% 两端对齐（避免因段落间距不均导致的底部对齐不齐）
+\raggedbottom% 页面底部不强制拉伸段间距
 \AtBeginDocument{\songti\selectfont}% 正文默认宋体
 %------中文风格------
 
 %%%%%%%%%%%%%%%%%%%封面%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
 \input{sduthesis-front-cover.def}
+\makeatother
 %------封面------
 
 %%%%%%%%%%%%%%%%%%%声明%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -399,19 +458,24 @@
 %------声明------
 \makeatletter
 %------Make------
-\newcommand{\maketitlepagestatement}{%
+\newcommand{\SDUblankpage}{%
+  \clearpage
+  \thispagestyle{empty}%
+  \null
+  \clearpage
+}
+\newcommand{\makefrontmatter}{%
   \maketitlepage
-%  \thispagestyle{empty}
-%%  ~
-%%  \vfill\eject
-%  \thispagestyle{empty}
-  \makestatement
-%  \vfill\eject
-%  \thispagestyle{empty}
-%  ~
-%  \vfill\eject
+  \ifSDU@opt@print\SDUblankpage\else\clearpage\fi
+  \ifSDU@opt@statement
+    \makestatement
+    \ifSDU@opt@print\SDUblankpage\else\clearpage\fi
+  \fi
+  \pagestyle{fancy}
   \setcounter{page}{1}
 }
+% Backward-compatible name used by releases before v1.2.0.
+\newcommand{\maketitlepagestatement}{\makefrontmatter}
 \newcommand{\maketableofcontents}{%
     \pagenumbering{Roman}
     \setcounter{secnumdepth}{3}% 确保 subsubsection 被编号

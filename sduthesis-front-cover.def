@@ -1,3 +1,4 @@
+% Shared cover fields and renderer dispatch.
 \newtoks\fenlei          % 中图分类号
 \newtoks\DWdaihao        % 单位代号
 \newtoks\miji            % 密级
@@ -16,64 +17,50 @@
 \newtoks\Grade           % 年级
 \newtoks\ThesisHeader    % 正文页眉
 \newtoks\EThesisHeader   % 英文页眉
-\newtoks\DegreeType      % 学位类型：学术学位 / 专业学位
 
 \RequirePackage{makecell}
 \RequirePackage{colortbl}
-\newcommand{\LeftLength}{2.3cm}
-\newcommand{\RightLength}{5.5cm}
-\newcommand{\Mcs}[1]{\makebox[\LeftLength][s]{{\zihao{-3}\songti{}#1}}}
-\newcommand{\Mcc}[1]{\makebox[\RightLength][c]{{\zihao{-3}\songti{}#1}}}
-\newcommand{\TopTitleLeft}[1]{\makebox[2cm][s]{{\zihao{-3}\songti{}#1}}}
-\newcommand{\TopTitleRight}[1]{\makebox[2.5cm][l]{{\zihao{-3}\songti{}#1}}}
+
+% Compatibility override: existing documents may keep using
+% \DegreeType{<custom formatted label>}. New documents should use degree=.
+\newif\ifSDU@degree@override
+\newtoks\SDU@degree@override@text
+\newcommand{\DegreeType}[1]{%
+  \SDU@degree@overridetrue
+  \SDU@degree@override@text={#1}%
+}
+
+\newcommand{\SDU@current@degree@line}{%
+  {\heiti\zihao{1}%
+    \ifSDU@degree@override
+      \the\SDU@degree@override@text
+    \else
+      \ifSDU@degree@professional
+        \textcolor{SDUred}{（专业学位）}%
+      \else
+        （学术学位）%
+      \fi
+    \fi
+  }%
+}
+
+\newcommand{\SDU@legacy@degree@line}{%
+  \ifSDU@degree@override
+    {\heiti\zihao{1}\the\SDU@degree@override@text\par\vspace{2mm}}%
+  \else
+    \ifSDU@degree@professional
+      {\heiti\zihao{1}\textcolor{SDUred}{（专业学位）}\par\vspace{2mm}}%
+    \fi
+  \fi
+}
+
+\input{sduthesis-cover-2024.def}
+\input{sduthesis-cover-legacy.def}
 
 \newcommand{\maketitlepage}{%
-\thispagestyle{empty}
-
-\begin{flushleft}
-\setlength{\parskip}{0pt}\setlength{\baselineskip}{28pt}
-\textcolor{SDUred}{\TopTitleLeft{分类号：}~~\TopTitleRight{\the\fenlei}\hfill\TopTitleLeft{单位代码：\quad}~~\TopTitleRight{\quad10422}}\\
-\textcolor{SDUred}{\TopTitleLeft{密级：}~~\TopTitleRight{\the\miji}\hfill\TopTitleLeft{学\quad\quad 号：\quad}~~\TopTitleRight{\quad\the\StuNum}}
-\end{flushleft}
-
-\begin{center}
-~
-\vskip 12mm\relax
-{
-\includegraphics[width=.70\textwidth]{SDU_master.jpg}\\[3mm]
-{\fontsize{60}{72}\selectfont\bfseries\heiti\textcolor{SDUred}{\the\CThesisType}}\\[4mm]
-{\zihao{-2}\textcolor{SDUred}{\the\EThesisType}}\\[4mm]
-{\heiti\zihao{1}\the\DegreeType}
-}
-
-{
-    \centering
-    {\zihao{-3}\songti\textcolor{SDUred}{论文题目：}}~~
-    \zihao{-3}\songti\textcolor{SDUred}{\the\Ctitle}
-    \par
-}
-{
-\vskip 2mm
-\zihao{3}\bfseries\the\Etitle
-}
-\vskip 1\baselineskip
-\vfill
-{
-\begin{tabular}{p{\LeftLength}p{\RightLength}}
-\arrayrulecolor{SDUred}
-\Mcs{\textcolor{SDUred}{作~ 者~ 姓~ 名}}& \Mcc{\the\Cauthor}\\[-.8mm]\cline{2-2}\\[-4mm]
-\Mcs{\textcolor{SDUred}{培~ 养~ 单~ 位}}& \Mcc{\the\Dpart}\\[-.8mm]\cline{2-2}\\[-4mm]
-\Mcs{\textcolor{SDUred}{培~ 养~ 方~ 式}}& \Mcc{\the\Dform}\\[-.8mm]\cline{2-2}\\[-4mm]
-\Mcs{\textcolor{SDUred}{专~ 业~ 名~ 称}}& \Mcc{\the\Cmajor}\\[-.8mm]\cline{2-2}\\[-4mm]
-\Mcs{\textcolor{SDUred}{指~ 导~ 教~ 师}}& \Mcc{\the\Csuperver}\\[-.8mm]\cline{2-2}\\[-4mm]
-\Mcs{\textcolor{SDUred}{合~ 作~ 导~ 师}}& \Mcc{\the\Ccosuperver}\\[-.8mm]\cline{2-2}
-\end{tabular}
-}
-\par \vskip 20mm \relax
-\color{SDUred}
-{
-\zihao{3}\heiti\the\Cdate
-}
-\end{center}
-\let\cleardoublepage\clearpage
+  \ifSDU@cover@legacy
+    \SDU@make@legacy@cover
+  \else
+    \SDU@make@current@cover
+  \fi
 }

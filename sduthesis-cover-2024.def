@@ -1,0 +1,45 @@
+% 2024 cover renderer.
+\newcommand{\SDU@current@left@width}{2.7cm}
+\newcommand{\SDU@current@right@width}{5.5cm}
+\newcommand{\SDU@current@label}[1]{{\zihao{-3}\songti{}#1}}
+\newcommand{\SDU@current@value}[1]{{\zihao{-3}\songti{}#1}}
+\newcommand{\SDU@current@top@label}[1]{\makebox[2.4cm][l]{{\zihao{-3}\songti{}#1}}}
+\newcommand{\SDU@current@top@value}[1]{\makebox[2.5cm][l]{{\zihao{-3}\songti{}#1}}}
+
+\newcommand{\SDU@make@current@cover}{%
+  \thispagestyle{empty}%
+
+  \noindent\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}l@{}}
+  \textcolor{SDUred}{\SDU@current@top@label{分类号：}\SDU@current@top@value{\the\fenlei}} &
+  \textcolor{SDUred}{\SDU@current@top@label{单位代码：}\SDU@current@top@value{\the\DWdaihao}}\\[5pt]
+  \textcolor{SDUred}{\SDU@current@top@label{密级：}\SDU@current@top@value{\the\miji}} &
+  \textcolor{SDUred}{\SDU@current@top@label{学\quad\quad 号：}\SDU@current@top@value{\the\StuNum}}
+  \end{tabular*}
+
+  \begin{center}
+  ~
+  \vskip 12mm\relax
+  {\includegraphics[width=.70\textwidth]{SDU_master.jpg}\\[3mm]
+  {\fontsize{60}{72}\selectfont\bfseries\heiti\textcolor{SDUred}{\the\CThesisType}}\\[4mm]
+  {\zihao{-2}\textcolor{SDUred}{\the\EThesisType}}\\[4mm]
+  \SDU@current@degree@line}
+
+  {\centering
+    {\zihao{-3}\songti\textcolor{SDUred}{论文题目：}}~~
+    \zihao{-3}\songti\textcolor{SDUred}{\the\Ctitle}\par}
+  {\vskip 2mm\zihao{3}\bfseries\the\Etitle}
+  \vskip 1\baselineskip
+  \vfill
+  {\begin{tabular}{@{}>{\centering\arraybackslash}p{\SDU@current@left@width}>{\centering\arraybackslash}p{\SDU@current@right@width}@{}}
+  \arrayrulecolor{SDUred}
+  \SDU@current@label{\textcolor{SDUred}{作~ 者~ 姓~ 名}}& \SDU@current@value{\the\Cauthor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@current@label{\textcolor{SDUred}{培~ 养~ 单~ 位}}& \SDU@current@value{\the\Dpart}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@current@label{\textcolor{SDUred}{培~ 养~ 方~ 式}}& \SDU@current@value{\the\Dform}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@current@label{\textcolor{SDUred}{专~ 业~ 名~ 称}}& \SDU@current@value{\the\Cmajor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@current@label{\textcolor{SDUred}{指~ 导~ 教~ 师}}& \SDU@current@value{\the\Csuperver}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@current@label{\textcolor{SDUred}{合~ 作~ 导~ 师}}& \SDU@current@value{\the\Ccosuperver}\\[-.8mm]\cline{2-2}
+  \end{tabular}}
+  \par\vskip 20mm\relax
+  \color{SDUred}{\zihao{3}\heiti\the\Cdate}
+  \end{center}%
+}

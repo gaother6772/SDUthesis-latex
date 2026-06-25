@@ -1,25 +1,61 @@
 % !Mode:: "TeX:UTF-8"
 % !TeX root = SDUthesistemplate.tex
 %!TEX program = xelatex
-%\expandafter\def\csname CTEX@spaceChar\endcsname{\hspace{1em}}
 
-%==============================================================
-% 学位类型切换方式（见 contents/titlepageinfo.tex）：
+% ======================== 模板选项说明 ========================
+% 本模板的主要行为通过 \documentclass[...] 里的选项控制。
 %
-%   学术学位（默认/黑色）：\DegreeType{（学术学位）}
-%   专业学位（红色）：     \DegreeType{\textcolor{SDUred}{（专业学位）}}
+% 1. 页面模式（旧功能）
+%    single：电子版/单面模式，不额外插入装订用空白页。
+%    print ：打印版模式，封面、声明等前置页之后会按双面打印习惯补空白页。
 %
-% 在 titlepageinfo.tex 中取消对应行的注释即可，不要修改本文件。
-%==============================================================
-\documentclass[single,print]{sduthesis}
+% 2. 封面格式（新增功能）
+%    cover=2024  ：新版封面，默认值。包含标题上方的学位类型标识，
+%                  并在下方信息表中显示“培养方式”。
+%    cover=legacy：旧版封面，用于兼容旧版封皮扉页格式。
+%                  旧版学术学位封面不显示“（学术学位）”，
+%                  下方信息表也不显示“培养方式”。
+%
+% 3. 学位类型（新增功能）
+%    degree=academic     ：学术学位，默认值。
+%    degree=professional ：专业学位。新版封面会显示“（专业学位）”；
+%                          旧版封面也会在标题上方显示专业学位标识，
+%                          以便专业学位论文仍能明确区分。
+%
+%    如果学校后续要求使用特殊文字，也可以继续用旧兼容命令：
+%      \DegreeType{（自定义学位类型）}
+%    但一般情况下推荐优先使用 degree=academic/professional。
+%
+% 4. 原创性声明页（新增功能）
+%    statement   ：生成原创性声明页，默认值。
+%    nostatement ：不生成原创性声明页。适合只导出正文、盲审版，
+%                  或者封面/声明页由学院系统另行生成的情况。
+%
+% 常用写法示例：
+%   新版学术学位，含声明页：
+%     \documentclass[single,print,cover=2024,degree=academic,statement]{sduthesis}
+%   旧版学术学位封面，不含声明页：
+%     \documentclass[single,print,cover=legacy,degree=academic,nostatement]{sduthesis}
+%   新版专业学位，含声明页：
+%     \documentclass[single,print,cover=2024,degree=professional,statement]{sduthesis}
+% ==============================================================
+\documentclass[single,print,cover=2024,degree=academic,statement]{sduthesis}
 
+% titlepageinfo.tex：填写论文题目、作者、学院、专业、导师、日期等封面信息。
+% usersettings.tex ：填写摘要页、目录、页眉页脚、定理环境等用户级设置。
 \input{contents/titlepageinfo.tex}
 \input{contents/usersettings.tex}
 
 \begin{document}
 
-% 首页及原创性声明
-\maketitlepagestatement
+% 生成前置页：封面 + 打印版空白页 + 可选原创性声明页。
+% 是否使用新版/旧版封面、学术/专业学位、是否生成声明页，
+% 都由上方 \documentclass[...] 中的 cover、degree、statement/nostatement 控制。
+%
+% 旧版本模板中常用的命令 \maketitlepagestatement 仍然可以使用；
+% 现在它等价于 \makefrontmatter。新文档推荐使用 \makefrontmatter，
+% 因为这个名字更准确地表示“生成整组前置材料”。
+\makefrontmatter
 \cleardoublepage
 % 大写罗马页码
 \pagenumbering{Roman}\setcounter{page}{1}
@@ -65,9 +101,9 @@
 % 致谢及其他
 \input{contents/acknowledgement.tex}
 
-% 附录（取消注释即可启用）
-\appendix
-\input{contents/appendix1.tex}
+% 附录（取消下面两行的注释即可启用）
+% \appendix
+% \input{contents/appendix1.tex}
 
 \input{contents/miscellaneous.tex}
 

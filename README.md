@@ -1,6 +1,6 @@
 # 山东大学研究生毕业论文模板
 
-本论文模板基于 [cnDelbert/SDU_thesis_template_for_postgraduate](https://github.com/cnDelbert/SDU_thesis_template_for_postgraduate) 修改而来，在 CTeX / TeX Live 环境下编译通过。
+本论文模板基于 [cnDelbert/SDU_thesis_template_for_postgraduate](https://github.com/cnDelbert/SDU_thesis_template_for_postgraduate) 修改而来，已在 Windows + TeX Live 2024 环境下使用 XeLaTeX 编译通过。
 
 ## 模板参照
 
@@ -14,10 +14,13 @@
 与原模板相比，本版本的主要修改包括：
 
 - **封面重做**：根据 2024 版学位论文封面文件重新设计了封面排版
-- **新增字段**：封面新增 `\Dform`（培养方式）和 `\DegreeType`（学位类型）字段
-- **学位类型切换**：支持学术学位（黑色）/ 专业学位（红色）一键切换
+- **双封面支持**：可在 2024 版封面和旧版封面之间切换
+- **学位类型切换**：支持学术学位 / 专业学位，标签按封面版本自动显示
+- **声明页开关**：默认包含原创性声明，也可生成不带声明的草稿版本
 - **格式规范文档**：[山东大学硕士学位论文格式规范.md](山东大学硕士学位论文格式规范.md)
 - **内容示例化**：正文替换为通用示例，各章展示不同排版写法
+- **打印模式**：`print` 选项自动使用黑色超链接，并在封面和声明后插入装订空白页
+- **单双面模式**：`single` 使用单面版式；`double` 使用镜像页边距并让各章从奇数页开始
 
 ## 项目文件结构
 
@@ -25,12 +28,15 @@
 SDUthesis_latex/
 ├── SDUthesistemplate.tex      # 主入口文件
 ├── sduthesis.cls              # 论文样式文件（文档类）
-├── sduthesis-front-cover.def  # 封面定义
+├── sduthesis-front-cover.def  # 封面字段与版本分派
+├── sduthesis-cover-2024.def   # 2024 版封面
+├── sduthesis-cover-legacy.def # 旧版封面
 ├── sduthesis-statement.def    # 原创性声明
 ├── LICENSE                    # 许可证
 ├── .gitignore                 # Git 忽略规则
 ├── figures/                   # 图片存放目录
 │   ├── SDU_master.jpg         # 封面校徽
+│   ├── SDU.jpg                # 旧版封面标题图
 │   └── ...                    # 示例图片
 ├── contents/                  # 正文内容目录
 │   ├── titlepageinfo.tex      # 封面信息（标题、作者等）
@@ -43,27 +49,47 @@ SDUthesis_latex/
 │   ├── miscellaneous.tex      # 发表论文及获奖
 │   ├── appendix1.tex          # 附录
 │   └── reference.bib          # 参考文献库
-├── ccmap.sty                  # 字符映射
 ├── dtklogos.sty               # 字体标识
 └── gbt7714-numerical.bst      # GB/T 7714 参考文献格式
 ```
 
-## 封面使用说明
+## 文档类选项
 
-封面信息在 `contents/titlepageinfo.tex` 中填写：
+封面字段仍在 `contents/titlepageinfo.tex` 中填写；封面版本、学位类型和声明页在主文件的 `\documentclass` 中统一控制：
 
-### 学位类型切换
+| 选项 | 可选值 | 默认值 | 作用 |
+|------|--------|--------|------|
+| `cover` | `2024` / `legacy` | `2024` | 选择 2024 版或旧版封面 |
+| `degree` | `academic` / `professional` | `academic` | 选择学术学位或专业学位 |
+| 声明页 | `statement` / `nostatement` | `statement` | 是否生成原创性声明页 |
+| 页面 | `single` / `double` | `double` | 单面或双面排版 |
+| 输出 | `print` / `noprint` | `noprint` | 打印模式会插入装订空白页并关闭彩色链接 |
 
-在 `titlepageinfo.tex` 中切换（二选一，取消对应行的注释即可）：
+默认的 2024 版学术学位打印稿：
 
 ```latex
-\DegreeType{（学术学位）}                           % 默认，黑色
-% \DegreeType{\textcolor{SDUred}{（专业学位）}}     % 专业学位，红色
+\documentclass[single,print,cover=2024,degree=academic,statement]{sduthesis}
 ```
+
+旧版专业学位封面、不带声明的草稿：
+
+```latex
+\documentclass[single,print,cover=legacy,degree=professional,nostatement]{sduthesis}
+```
+
+旧版学术学位封面不显示“（学术学位）”，旧版专业学位封面显示红色“（专业学位）”；旧版封面不显示“培养方式”。如果学校提供了特殊标签，仍可在 `titlepageinfo.tex` 中使用 `\DegreeType{...}` 覆盖自动标签。
+
+> `nostatement` 仅用于草稿、匿名评审或内部版本。正式提交前应以学校当年要求为准，通常必须保留原创性声明。
 
 ## 编译方法
 
-需要 CTeX 套装或 TeX Live，支持 `xelatex` 命令。
+推荐使用 TeX Live 2024 或更新版本，并确保系统安装 Times New Roman 字体。最简单的构建方式是：
+
+```bash
+latexmk -xelatex SDUthesistemplate.tex
+```
+
+也可以手动执行完整流程：
 
 ```bash
 xelatex SDUthesistemplate.tex
@@ -72,12 +98,7 @@ xelatex SDUthesistemplate.tex
 xelatex SDUthesistemplate.tex
 ```
 
-> 如果 CTeX 中 ctex 包版本为 1.02c 或更早，请在 `SDUthesistemplate.tex` 开头取消注释：
-> ```latex
-> \expandafter\def\csname CTEX@spaceChar\endcsname{\hspace{1em}}
-> ```
-
-编译生成的 PDF 可直接打印，双面打印效果最佳。
+模板入口默认为 2024 版、学术学位、包含声明。电子版可移除 `print`；双面装订可将 `single` 改为 `double`。
 
 ## 快速开始
 
@@ -85,7 +106,13 @@ xelatex SDUthesistemplate.tex
 2. 编辑 `contents/ch1.tex` ~ `contents/ch5.tex`，替换各章正文
 3. 编辑 `contents/abstract.tex`，填写中英文摘要
 4. 编辑 `contents/reference.bib`，添加参考文献
-5. 运行 `xelatex` 编译
+5. 运行 `latexmk -xelatex SDUthesistemplate.tex` 编译
+
+如需清理辅助文件，可运行：
+
+```bash
+latexmk -C
+```
 
 ## 各章示例内容速览
 

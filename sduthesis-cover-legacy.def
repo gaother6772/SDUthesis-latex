@@ -1,0 +1,45 @@
+% Legacy cover renderer, reproduced from the former cover-only.tex output.
+\newcommand{\SDU@legacy@left@width}{2.7cm}
+\newcommand{\SDU@legacy@right@width}{5.5cm}
+\newcommand{\SDU@legacy@label}[1]{{\zihao{4}\heiti{}#1}}
+\newcommand{\SDU@legacy@value}[1]{{\zihao{4}\heiti{}#1}}
+\newcommand{\SDU@legacy@top@label}[1]{\makebox[2.2cm][l]{{\zihao{4}\heiti{}#1}}}
+\newcommand{\SDU@legacy@top@value}[1]{\makebox[2.5cm][l]{{\zihao{4}\heiti{}#1}}}
+
+\newcommand{\SDU@make@legacy@cover}{%
+  \newgeometry{left=2.5cm,right=2.5cm,top=2.8cm,bottom=2.5cm,headheight=2cm,headsep=0.8cm,footskip=1.44cm}%
+  \thispagestyle{empty}%
+
+  \vspace*{-5pt}% Compensate for the tabular strut to match the legacy top offset.
+  \noindent\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}l@{}}
+  \SDU@legacy@top@label{\textcolor{SDUred}{分类号：}}\SDU@legacy@top@value{\the\fenlei} &
+  \SDU@legacy@top@label{\textcolor{SDUred}{单位代码：}}\SDU@legacy@top@value{\textcolor{SDUred}{\the\DWdaihao}}\\[-5.5pt]
+  \SDU@legacy@top@label{\textcolor{SDUred}{密级：}}\SDU@legacy@top@value{\the\miji} &
+  \SDU@legacy@top@label{\textcolor{SDUred}{学\quad\quad 号：}}\SDU@legacy@top@value{\the\StuNum}
+  \end{tabular*}
+
+  \begin{center}
+  ~
+  \vskip 12mm\relax
+  {\includegraphics[width=.83\textwidth]{SDU.jpg}\\[3mm]}
+  \SDU@legacy@degree@line
+
+  \makebox[\textwidth][c]{%
+    {\zihao{-2}\heiti\textcolor{SDUred}{论文题目\textbf{:}}}\hspace{13pt}%
+    {\zihao{-2}\heiti\the\Ctitle}%
+  }\par
+  {\vskip 2mm\zihao{3}\bfseries\the\Etitle}
+  \vfill
+  {\begin{tabular}{@{}>{\centering\arraybackslash}p{\SDU@legacy@left@width}>{\centering\arraybackslash}p{\SDU@legacy@right@width}@{}}
+  \arrayrulecolor{SDUred}
+  \SDU@legacy@label{\textcolor{SDUred}{作~ 者~ 姓~ 名}}& \SDU@legacy@value{\the\Cauthor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@legacy@label{\textcolor{SDUred}{培~ 养~ 单~ 位}}& \SDU@legacy@value{\the\Dpart}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@legacy@label{\textcolor{SDUred}{专~ 业~ 名~ 称}}& \SDU@legacy@value{\the\Cmajor}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@legacy@label{\textcolor{SDUred}{指~ 导~ 教~ 师}}& \SDU@legacy@value{\the\Csuperver}\\[-.8mm]\cline{2-2}\\[-4mm]
+  \SDU@legacy@label{\textcolor{SDUred}{合~ 作~ 导~ 师}}& \SDU@legacy@value{\the\Ccosuperver}\\[-.8mm]\cline{2-2}
+  \end{tabular}}
+  \par\vskip 20mm\relax
+  \color{SDUred}{\zihao{-2}\the\Cdate}
+  \end{center}%
+  \restoregeometry
+}
